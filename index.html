@@ -45,12 +45,15 @@
 
       <!-- ===== PC表示のナビ（スマホでは非表示になる） ===== -->
       <nav class="nav" id="nav" aria-label="グローバルナビゲーション">
-        <a href="#show">次回公演</a>
+        <!-- ===== 編集ポイント：並び順を変えるとヘッダ体験が変わる ===== -->
         <a href="#news">News</a>
+        <a href="#schedule">Schedule</a>
         <a href="#about">劇団について</a>
         <a href="#members">メンバー</a>
-        <a href="#gallery">Gallery</a>
-        <a class="nav__cta" href="#reserve">予約</a>
+        <a href="#follow">SNS</a>
+
+        <!-- ===== 編集ポイント：CTA（強い導線）にしたい項目には nav__cta を付ける ===== -->
+        <a href="#contact" class="nav__cta">お問い合わせ</a>
       </nav>
 
       <!-- ===== スマホのメニュー開閉ボタン ===== -->
@@ -73,13 +76,14 @@
 
       <div class="drawer__links">
         <!-- ===== 編集ポイント：スマホメニュー項目 ===== -->
-        <a href="#show">次回公演</a>
         <a href="#news">News</a>
+        <a href="#schedule">Schedule</a>
         <a href="#about">劇団について</a>
         <a href="#members">メンバー</a>
-        <a href="#gallery">Gallery</a>
-        <a class="drawer__cta" href="#reserve">予約</a>
-        <a href="#contact">お問い合わせ</a>
+        <a href="#follow">SNS</a>
+
+        <!-- ===== 編集ポイント：スマホ側もCTAにしたい場合は drawer__cta を付ける ===== -->
+        <a href="#contact" class="drawer__cta">お問い合わせ</a>
       </div>
 
       <div class="drawer__foot">
@@ -98,7 +102,7 @@
 
         <div class="hero__copy">
           <!-- ===== 編集ポイント：バッジ文言 ===== -->
-          <p class="badge">NEXT STAGE</p>
+          <p class="badge">次回公演</p>
 
           <!-- ===== 編集ポイント：公演タイトル（最も目立つ） ===== -->
           <h1 class="hero__title">『作品タイトル』</h1>
@@ -129,14 +133,11 @@
           <div class="hero__actions">
             <!-- 公開時：href を予約フォームURLに差し替え推奨（#reserveでもOK） -->
             <a class="btn btn--primary" href="#reserve">チケット予約</a>
-
-            <!-- 公演詳細へスクロール -->
-            <a class="btn btn--ghost" href="#show">公演詳細</a>
           </div>
 
           <p class="hero__note">
+            ※公演詳細はSNSを確認推奨
             <!-- 編集ポイント：補足（任意） -->
-            ※ 予約導線は「1クリック」を意識すると成果が出やすい
           </p>
         </div>
 
@@ -154,86 +155,19 @@
       </div>
     </section>
 
-    <!-- ===== 次回公演 ===== -->
-    <section class="section" id="show">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">次回公演</h2>
-          <p class="section__sub">公演情報・あらすじ・スケジュール</p>
-        </div>
-
-        <div class="grid grid--2">
-          <article class="card">
-            <h3 class="card__title">あらすじ</h3>
-
-            <!-- ===== 編集ポイント：あらすじ（2〜6行推奨） ===== -->
-            <p class="card__text">
-              ここにあらすじを2〜6行。長いなら別ページに「続きを読む」を作るのがプロっぽい。
-            </p>
-
-            <!-- ===== 編集ポイント：タグ（作品の情報を短く） ===== -->
-            <div class="tagRow">
-              <span class="tag">作・演出：〇〇</span>
-              <span class="tag">上演時間：約90分</span>
-              <span class="tag">ジャンル：〇〇</span>
-            </div>
-          </article>
-
-          <article class="card">
-            <h3 class="card__title">公演スケジュール</h3>
-
-            <!-- ===== 編集ポイント：公演日程 ===== -->
-            <ul class="list">
-              <li><span class="list__key">2/14(土)</span><span class="list__val">19:00</span></li>
-              <li><span class="list__key">2/15(日)</span><span class="list__val">14:00 / 19:00</span></li>
-              <li><span class="list__key">2/16(月)</span><span class="list__val">14:00</span></li>
-            </ul>
-
-            <p class="note">※受付開始：開演45分前／開場：30分前</p>
-          </article>
-        </div>
-
-        <div class="grid grid--3 mt">
-          <article class="card card--tight">
-            <h3 class="card__title">会場</h3>
-
-            <!-- ===== 編集ポイント：会場情報 ===== -->
-            <p class="card__text">〇〇シアター（〇〇駅 徒歩5分）</p>
-
-            <!-- ===== 編集ポイント：GoogleマップURL ===== -->
-            <a class="link" href="#" target="_blank" rel="noopener">地図を見る →</a>
-          </article>
-
-          <article class="card card--tight">
-            <h3 class="card__title">料金</h3>
-
-            <!-- ===== 編集ポイント：料金 ===== -->
-            <p class="card__text">前売 ¥3,500 / 当日 ¥4,000 / 学生 ¥3,000</p>
-            <p class="note">※学生は要学生証</p>
-          </article>
-
-          <article class="card card--tight" id="reserve">
-            <h3 class="card__title">予約</h3>
-
-            <!-- ===== 編集ポイント：予約説明 ===== -->
-            <p class="card__text">予約フォーム（Googleフォーム等）へ。</p>
-
-            <!-- ===== 編集ポイント：予約URL（最重要） ===== -->
-            <a class="btn btn--primary btn--block" href="#" target="_blank" rel="noopener">予約フォームへ</a>
-          </article>
-        </div>
-      </div>
-    </section>
+    <!-- ===== アンカー：#show（公演詳細ボタンの着地点） ===== -->
+    <!-- 編集ポイント：公演詳細を独立セクションにする場合は、そこに id="show" を付けるのが理想 -->
+    <div id="show" class="anchor"></div>
 
     <!-- ===== News ===== -->
     <section class="section section--alt" id="news">
       <div class="container">
         <div class="section__head">
           <h2 class="section__title">News</h2>
-          <p class="section__sub">更新は3件だけでも「稼働しているサイト」に見える</p>
+          <p class="section__sub"></p>
         </div>
 
-        <div class="grid grid--3">
+        <div class="grid grid--3 newsGrid">
           <!-- ===== 編集ポイント：ニュース（3件〜） ===== -->
           <article class="card card--hover">
             <p class="news__date">2025.12.27</p>
@@ -256,44 +190,127 @@
       </div>
     </section>
 
-    <!-- ===== About ===== -->
-    <section class="section" id="about">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">劇団について</h2>
-          <p class="section__sub">「何を大事にする劇団か」を一言で</p>
-        </div>
+<!-- ===== Schedule（今後の予定） ===== -->
+<section class="section section--alt" id="schedule">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title">Schedule</h2>
+      <p class="section__sub">今後の公演予定</p>
+    </div>
 
-        <div class="grid grid--2">
-          <article class="card">
-            <h3 class="card__title">コンセプト</h3>
+    <!-- ===== 編集ポイント：予定は上から「近い順」 ===== -->
+    <div class="grid grid--2 scheduleGrid">
+      <article class="card">
+        <p class="news__date">2026.02.14–02.16</p>
+        <h3 class="card__title">第x回公演『作品タイトル』</h3>
+        <p class="card__text">
+          会場：〇〇シアター<br />
+          備考：チケット発売中
+        </p>
+      </article>
 
-            <!-- ===== 編集ポイント：劇団コンセプト ===== -->
-            <p class="card__text">
-              例：日常のすぐ横にある感情を、静かに、でも確かな言葉で立ち上げる。
-            </p>
-          </article>
+      <article class="card">
+        <p class="news__date">2026.01</p>
+        <!-- ===== 編集ポイント：タイトル表記（カギカッコの閉じ忘れ注意） ===== -->
+        <h3 class="card__title">第x回公演『作品タイトル』</h3>
+        <p class="card__text">
+          次回公演に向けた稽古スタート。
+        </p>
+      </article>
 
-          <article class="card">
-            <h3 class="card__title">沿革</h3>
+      <article class="card">
+        <p class="news__date">2026.01</p>
+        <!-- ===== 編集ポイント：タイトル表記（カギカッコの閉じ忘れ注意） ===== -->
+        <h3 class="card__title">第x回公演『作品タイトル』</h3>
+        <p class="card__text">
+          次回公演に向けた稽古スタート。
+        </p>
+      </article>
+      
+    </div>
 
-            <!-- ===== 編集ポイント：沿革 ===== -->
-            <ul class="list">
-              <li><span class="list__key">2023</span><span class="list__val">劇団結成</span></li>
-              <li><span class="list__key">2024</span><span class="list__val">第1回公演『〇〇』</span></li>
-              <li><span class="list__key">2025</span><span class="list__val">第2回公演『〇〇』</span></li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
+    <p class="note">
+      <!-- ===== 編集ポイント：運用ルールを書くと親切 ===== -->
+      ※ スケジュールは変更になる場合があります。
+    </p>
+  </div>
+</section>
+    
+<!-- =======================================================
+  ===== About（劇団について） =====
+  目的：
+  - 「コンセプト」と「沿革」を2カラムで横並びにする
+  - スマホでは自動で縦並び（CSSの grid--2 のレスポンシブが効く）
+  注意：
+  - div の閉じタグ位置がズレると、片方だけ横に伸びたり崩れます
+======================================================= -->
+<section class="section" id="about">
+  <div class="container">
+    <!-- ===== セクション見出し ===== -->
+    <div class="section__head">
+      <h2 class="section__title">劇団について</h2>
+
+      <!-- ===== 編集ポイント：サブコピー（空なら消してOK） ===== -->
+      <p class="section__sub">「何を大事にする劇団か」を一言で。</p>
+    </div>
+
+    <!-- =====================================================
+      ===== 2カラムのグリッド =====
+      ここから下は「カード2枚」を grid の中に入れるのがルール
+      ※ 途中で </div> を閉じるとレイアウトが崩れます
+    ====================================================== -->
+    <div class="grid grid--1">
+
+      <!-- =========================
+        カード①：コンセプト
+        編集ポイント：本文だけ変えればOK
+      ========================== -->
+      <article class="card">
+        <h3 class="card__title">コンセプト</h3>
+
+        <!-- ===== 編集ポイント：劇団コンセプト ===== -->
+        <p class="card__text">
+          例：日常のすぐ横にある感情を、静かに、でも確かな言葉で立ち上げる。
+        </p>
+
+        <!-- ===== 編集ポイント：補足（必要なら） ===== -->
+        <!-- <p class="note">例：観客の帰り道に、少しだけ温度が残る芝居を。</p> -->
+      </article>
+
+      <!-- =========================
+        カード②：沿革
+        編集ポイント：年と内容を増やすだけ
+      ========================== -->
+      <article class="card">
+        <h3 class="card__title">沿革</h3>
+
+        <!-- ===== 編集ポイント：沿革 =====
+          ・行を増やしたい → <li> を追加
+          ・年だけ変えたい → list__key の中身
+          ・内容を変えたい → list__val の中身
+        ===== -->
+        <ul class="list">
+          <li><span class="list__key">20xx</span><span class="list__val">劇団結成</span></li>
+          <li><span class="list__key">20xx</span><span class="list__val">第1回公演『〇〇』</span></li>
+          <li><span class="list__key">20xx</span><span class="list__val">第2回公演『〇〇』</span></li>
+          <li><span class="list__key">20xx</span><span class="list__val">第3回公演『〇〇』</span></li>
+          <li><span class="list__key">20xx</span><span class="list__val">第4回公演『〇〇』</span></li>
+        </ul>
+
+        <!-- ===== 編集ポイント：注意書き（必要なら） ===== -->
+        <!-- <p class="note">※ 公演名は後から差し替え可能です。</p> -->
+      </article>
+
+    </div><!-- /.grid -->
+  </div><!-- /.container -->
+</section>
 
     <!-- ===== Members ===== -->
     <section class="section section--alt" id="members">
       <div class="container">
         <div class="section__head">
           <h2 class="section__title">メンバー</h2>
-          <p class="section__sub">役職＋一言コメントで一気に“団体感”が出る</p>
+          <p class="section__sub"></p>
         </div>
 
         <div class="grid grid--3">
@@ -303,15 +320,23 @@
             <h3 class="member__name">〇〇</h3>
             <p class="member__role">座長</p>
             <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">X</a> 
+            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
           </article>
 
           <article class="card member card--hover">
             <div class="avatar" aria-hidden="true"></div>
             <h3 class="member__name">〇〇</h3>
-            <p class="member__role">役者</p>
+            <p class="member__role">役者1</p>
             <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">X</a> 
+            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
+          </article>
+
+          <article class="card member card--hover">
+            <div class="avatar" aria-hidden="true"></div>
+            <h3 class="member__name">〇〇</h3>
+            <p class="member__role">役者2</p>
+            <p class="member__note">一言コメント。</p>
+            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
           </article>
 
           <article class="card member card--hover">
@@ -319,41 +344,53 @@
             <h3 class="member__name">〇〇</h3>
             <p class="member__role">制作</p>
             <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">X</a> 
+            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ===== Gallery ===== -->
-    <section class="section" id="gallery">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">Gallery</h2>
-          <p class="section__sub">写真が入ると信用が一気に上がる</p>
-        </div>
+<!-- ===== Follow / SNS ===== -->
+<section class="section" id="follow">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title">SNS</h2>
+      <p class="section__sub">稽古場の空気感や最新情報はSNSで更新しています</p>
+    </div>
 
-        <div class="gallery">
-          <!-- ===== 編集ポイント：写真を入れる =====
-               1) assets/ に画像を置く
-               2) div.ph を img に置き換える（例は下）
-               3) alt を必ず書く（内容が分かる短文） -->
+    <div class="grid grid--3">
+      <!-- ===== 編集ポイント：URL差し替え ===== -->
+      <a class="social card card--hover" href="#" target="_blank" rel="noopener">
+        <p class="social__label">X</p>
+        <h3 class="social__title">最新情報</h3>
+        <p class="card__text">公演情報・告知・当日案内</p>
+        <p class="social__go">見に行く →</p>
+      </a>
 
-          <!-- 画像に置き換える例：
-          <img class="phimg" src="./assets/p1.jpg" alt="公演写真1">
-          -->
+      <!-- <a class="social card card--hover" href="#" target="_blank" rel="noopener">
+        <p class="social__label">Instagram</p>
+        <h3 class="social__title">写真 / リール</h3>
+        <p class="card__text">稽古写真・舞台写真・雰囲気</p>
+        <p class="social__go">見に行く →</p>
+      </a> -->
 
-          <div class="ph" aria-label="写真1（仮）"></div>
-          <div class="ph" aria-label="写真2（仮）"></div>
-          <div class="ph" aria-label="写真3（仮）"></div>
-          <div class="ph" aria-label="写真4（仮）"></div>
-          <div class="ph" aria-label="写真5（仮）"></div>
-          <div class="ph" aria-label="写真6（仮）"></div>
-        </div>
+      <a class="social card card--hover" href="#" target="_blank" rel="noopener">
+        <p class="social__label">YouTube</p>
+        <h3 class="social__title">映像（👷準備中👷）</h3>
+        <p class="card__text">ダイジェスト・トレーラー</p>
+        <p class="social__go">見に行く →</p>
+      </a>
+    </div>
 
-        <p class="note">※本物にするなら div.ph を img に置き換え</p>
-      </div>
-    </section>
+    <p class="note">
+      
+    </p>
+  </div>
+</section>
+
+    <!-- ===== アンカー：#reserve（予約ボタンの着地点） ===== -->
+    <!-- 編集ポイント：外部予約フォームを使う場合は、#reserve ではなくURLに直リンクでもOK -->
+    <div id="reserve" class="anchor"></div>
 
     <!-- ===== Contact ===== -->
     <section class="section section--alt" id="contact">
@@ -373,16 +410,6 @@
             </p>
           </article>
 
-          <article class="card">
-            <h3 class="card__title">SNS</h3>
-
-            <!-- ===== 編集ポイント：SNSリンク（hrefにURLを入れる） ===== -->
-            <p class="card__text">
-              <a class="link" href="#" target="_blank" rel="noopener">X</a> /
-              <a class="link" href="#" target="_blank" rel="noopener">Instagram</a> /
-              <a class="link" href="#" target="_blank" rel="noopener">YouTube</a>
-            </p>
-          </article>
         </div>
       </div>
     </section>

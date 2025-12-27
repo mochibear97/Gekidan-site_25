@@ -15,6 +15,9 @@
 
   /* ===== 編集ポイント：フォーカス色（キーボード操作の見た目） ===== */
   --focus: 0 0 0 3px rgba(178,58,58,0.45);
+
+  /* ===== 編集ポイント：ヘッダの下線位置（1ついじるだけで調整できる） ===== */
+  --navUnderlineOffset: 6px; /* 4〜8px で調整 */
 }
 
 /* ===== ベース ===== */
@@ -47,7 +50,7 @@ img{ max-width: 100%; display: block; }
 .container{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
 
 /* ===== stickyヘッダー分のズレ対策 ===== */
-section{ scroll-margin-top: 78px; }
+section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに合わせて 90〜110px で調整 */
 .anchor{ height: 0; }
 
 /* ===== キーボード用：本文へスキップ ===== */
@@ -89,6 +92,13 @@ section{ scroll-margin-top: 78px; }
   gap: 12px;
 }
 
+/* ===== ヘッダ崩れ対策：ロゴとナビが詰まってもレイアウトが壊れないように ===== */
+/* 編集ポイント：ロゴが縮んで欲しくないので固定。ナビは縮んで横スクロールに逃がす */
+.brand{ flex: 0 0 auto; }
+.header__inner{ min-width: 0; }
+.nav{ min-width: 0; }
+
+
 /* ===== ロゴ（文字） ===== */
 .brand{ text-decoration: none; display: grid; gap: 2px; }
 .brand__jp{ font-weight: 900; letter-spacing: 0.02em; }
@@ -111,6 +121,71 @@ section{ scroll-margin-top: 78px; }
   border: 1px solid transparent;
 }
 .nav__cta:hover{ filter: brightness(1.05); }
+
+/* =========================================================
+   Header Nav Upgrade（プロ仕様）
+   ① 区切り線（縦線）
+   ② 現在地下線（hover / active）
+   ③ ナビを箱化（高級感）
+   ---------------------------------------------------------
+   編集ポイント：
+   - 角丸：14px（箱）/ 10px（リンク）
+   - 線色：var(--line)
+   - 下線色：var(--accent)
+========================================================= */
+
+/* ③ ナビ全体を“箱”にする（高級感・UI感） */
+.nav{
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  box-shadow: var(--shadowSoft);
+}
+
+/* ①②のために relative を付与 */
+.nav a{ position: relative; }
+
+/* ① 区切り線：2個目以降のリンクの左に縦線を出す */
+.nav a + a{
+  margin-left: 2px;     /* 線と文字の距離 */
+  padding-left: 14px;   /* 線の右側余白 */
+}
+.nav a + a::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;         /* 線の高さ */
+  background: var(--line);
+  opacity: 0.9;
+}
+
+/* ② 下線インジケータ（hover / active） */
+.nav a::after{
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;                /* 下線の位置 */
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 160ms ease;
+  opacity: 0.95;
+}
+.nav a:hover::after{ transform: scaleX(1); }
+.nav a.is-active::after{ transform: scaleX(1); }
+
+/* CTA（お問い合わせ）は“ボタン”として扱う：線＆下線は消す */
+.nav a.nav__cta::before,
+.nav a.nav__cta::after{ display: none; }
+.nav a.nav__cta{ margin-left: 6px; }
+
 
 /* ===== スマホのメニューボタン（PCでは非表示） ===== */
 .navToggle{
@@ -161,6 +236,13 @@ section{ scroll-margin-top: 78px; }
   background: rgba(255,255,255,0.03);
 }
 .drawer__links a:hover{ background: rgba(255,255,255,0.06); }
+
+/* ===== Drawer：現在地ハイライト（JSが is-active を付与） ===== */
+.drawer__links a.is-active{
+  border-color: rgba(178,58,58,0.55); /* 編集ポイント：強さ */
+  background: rgba(178,58,58,0.10);
+}
+
 .drawer__cta{
   background: var(--accent) !important;
   border-color: transparent !important;
@@ -179,7 +261,7 @@ section{ scroll-margin-top: 78px; }
 }
 .badge{
   display: inline-block;
-  font-size: 12px;
+  font-size: 20px;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.82);
   border: 1px solid var(--line);
@@ -250,11 +332,13 @@ section{ scroll-margin-top: 78px; }
 
 /* ===== Sections ===== */
 .section{ padding: 42px 0; }
+/* 編集ポイント：sectionの交互背景を控えめに */
 .section--alt{
-  background: rgba(255,255,255,0.02);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,0.012); /* 0.02 → 0.012 くらいに */
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+
 .section__head{ margin-bottom: 16px; }
 .section__title{ margin: 0; font-size: 22px; letter-spacing: 0.02em; }
 .section__sub{ margin: 6px 0 0; color: var(--muted); font-size: 14px; }
@@ -291,22 +375,61 @@ section{ scroll-margin-top: 78px; }
   color: var(--muted);
 }
 
+/* =========================================================
+   List（沿革など：年 + 内容）
+   - 以前の flex + space-between は、左右が離れすぎて
+     「文字間が広い」ように見えることがあるため
+     グリッドで“年カラム”を固定して整列させます。
+   - ここは沿革以外にも「キー：値」の行に流用できます。
+   ========================================================= */
+
 .list{
+  /* ===== 編集ポイント：年の列幅（2025が収まる程度） ===== */
+  --year-col: 4.5em;
+
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  gap: 8px;
+  display: grid; /* li を縦に積む */
 }
+
+/* 1行（年 + 内容） */
 .list li{
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: var(--year-col) 1fr; /* 左：年 / 右：内容 */
+  column-gap: 60px; /* ===== 編集ポイント：年と内容の間隔 ===== */
+  align-items: baseline; /* 数字と文字の高さを揃えて読みやすく */
+  padding: 10px 0;
   border-bottom: 1px dashed rgba(255,255,255,0.16);
-  padding-bottom: 8px;
 }
-.list__key{ color: var(--muted); }
-.list__val{ font-weight: 800; }
+
+.list li:last-child{
+  border-bottom: 0; /* 最後の線は消す（すっきり） */
+  padding-bottom: 0;
+}
+
+.list__key{
+  color: var(--muted);
+  font-variant-numeric: tabular-nums; /* 年が揃って見える（プロ感） */
+}
+
+.list__val{
+  font-weight: 800;
+
+  /* ===== 編集ポイント：右寄せにしたい場合 =====
+     右側の文字を揃えると“表”っぽく見えます。
+     ただし、広い画面だと離れすぎて見える場合があるので
+     まずは左寄せ（デフォルト）がおすすめです。 */
+  /* text-align: right; */
+
+  min-width: 0; /* 長文がある時に崩れないための保険 */
+}
+
+/* ===== スマホ：年列と間隔を少し詰める ===== */
+@media (max-width: 520px){
+  .list{ --year-col: 4.0em; }
+  .list li{ column-gap: 14px; }
+}
 
 .link{ color: rgba(255,255,255,0.86); }
 .link:hover{ color: white; text-decoration: underline; }
@@ -323,26 +446,35 @@ section{ scroll-margin-top: 78px; }
   border: 1px solid var(--line);
 }
 
-/* ===== Gallery ===== */
-/* 編集ポイント：画像を使うなら .phimg を使う（index.html側のコメント参照） */
-.gallery{ display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
-.ph{
-  border-radius: var(--r);
-  border: 1px solid var(--line);
-  background:
-    radial-gradient(600px 200px at 20% 10%, rgba(178,58,58,0.18), transparent 60%),
-    rgba(255,255,255,0.05);
-  min-height: 160px;
+/* ===== Social ===== */
+.social{
+  text-decoration: none;
+  display: block;
 }
-/* 画像に置き換える時に有効化（必要ならコメント外す）
-.phimg{
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: var(--r);
-  border: 1px solid var(--line);
+.social__label{
+  margin: 0 0 6px;
+
+  /* ===== 編集ポイント：X / YouTube の文字サイズ ===== */
+  font-size: 18px;            /* 12 → 14〜16 あたりが見やすい */
+
+  /* ===== 編集ポイント：見出し感を少し強くする ===== */
+  font-weight: 900;           /* なくてもOK（強すぎたら 800） */
+  letter-spacing: .14em;      /* 広すぎると逆に間延びするので少し詰める */
+
+  color: var(--muted);}
+.social__title{
+  margin: 0 0 6px;
+
+  /* ===== 編集ポイント：SNSカードのメイン見出し ===== */
+  font-size: 16px;  /* 16 → 17〜18 */
+
+  font-weight: 900; /* タイトル感（任意） */
 }
-*/
+.social__go{
+  margin: 12px 0 0;
+  font-weight: 800;
+  color: rgba(255,255,255,0.86);
+}
 
 /* ===== Footer ===== */
 .footer{ padding: 26px 0; border-top: 1px solid var(--line); }
@@ -371,4 +503,47 @@ section{ scroll-margin-top: 78px; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   *{ transition: none !important; }
+}
+
+
+/* =========================================================
+   Pro polish pack（余白・見出し・カード整形）
+   目的：
+   - #news / #schedule へ飛んだ時に“ヘッダに隠れない”
+   - セクション間の“呼吸”を作って高級感を上げる
+   - News / Schedule のカードを揃えて“整ってる感”を出す
+
+   編集ポイント：
+   - 余白を詰めたい：.section の padding を下げる（54→48など）
+   - Newsカードの高さ：.newsGrid .card の min-height を調整
+   - Scheduleカードの高さ：.scheduleGrid .card の min-height を調整
+========================================================= */
+
+/* ===== セクション余白（全体の品） ===== */
+.section{
+  padding: 54px 0; /* 編集ポイント：48〜64px で好み調整 */
+}
+
+/* ===== 見出し階層の統一（公式サイト感） ===== */
+.section__head{ margin-bottom: 18px; }
+.section__title{
+  font-size: 24px;       /* 編集ポイント：22→24で“見出し感”UP */
+  letter-spacing: 0.03em;
+}
+.section__sub{
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+/* ===== News：3カードが“同じ高さ”に見えると一気にプロ ===== */
+.newsGrid .card{
+  min-height: 120px; /* 編集ポイント：120〜140 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ===== Schedule：カードがバラつくと素人感が出るので最低限揃える ===== */
+.scheduleGrid .card{
+  min-height: 140px; /* 編集ポイント：140〜170 */
 }
