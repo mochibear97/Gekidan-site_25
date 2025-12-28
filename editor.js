@@ -22,11 +22,49 @@
  * =========================================================
  */
 
+
+/* =========================================================
+ * 🔰 JavaScript初心者向け：このファイルの読み方（C/C++しか触ってない前提）
+ * ---------------------------------------------------------
+ * まず“単語”だけ押さえると読みやすくなります。
+ *
+ * ■ const / let
+ *  - const: “再代入しない”変数。C++でいう const 変数っぽい。
+ *  - let  : “再代入する”変数。C++でいう通常の変数っぽい。
+ *
+ * ■ Arrow Function（=>）
+ *  - const f = (a) => a+1; みたいな短い関数定義。
+ *  - C++のラムダに近い（[](){}）。
+ *
+ * ■ DOM / querySelector
+ *  - HTMLの要素（タグ）を JS から掴むのが DOM 操作。
+ *  - querySelector("cssセレクタ") は、CSSと同じ書き方で要素を1つ取る。
+ *  - querySelectorAll(...) は複数取る（NodeList）→ Array.from で配列にする。
+ *
+ * ■ addEventListener
+ *  - “クリック/入力/送信”などのイベントに処理を登録する。
+ *  - C++でいうコールバック登録に近い。
+ *
+ * ■ JSON
+ *  - テキスト形式のデータ。ここでは「サイトの文章や日程」を全部 JSON に入れる。
+ *  - editor.html は “JSONを作る道具”、index.html は “JSONを読む側”。
+ *
+ * ■ このGUIの設計思想（重要）
+ *  - 編集者：GUIで入力 → JSONを書き出して送るだけ（Git不要）
+ *  - 管理者：受け取った JSON を content/site.json に上書きして push
+ * ========================================================= */
+
 // =========================================================
 // 0) DOMショートカット
 // =========================================================
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+// ↑ $ / $$ は “DOMショートカット”。
+//   - $(...) は 1個だけ取る（見つからなければ null）
+//   - $$(...) は 複数取る → Array.from で “本物の配列” にしている
+//   - root = document は “デフォルト引数”。指定しなければページ全体から探す
+
 
 // =========================================================
 // 1) 初期テンプレ（「新規作成」用）
@@ -98,6 +136,10 @@ const TEMPLATE = {
 // =========================================================
 // 2) 状態（ここに編集内容が入る）
 // =========================================================
+// state は “今フォームで編集している最新データ” を入れる箱。
+// structuredClone(...) は “深いコピー（deep copy）”。
+// - TEMPLATE をそのまま使うと、編集で TEMPLATE 自体が壊れる危険がある
+// - C++でいう「テンプレの構造体を丸ごと複製して別インスタンスにする」イメージ
 let state = structuredClone(TEMPLATE);
 
 // =========================================================
@@ -107,6 +149,16 @@ let state = structuredClone(TEMPLATE);
 // - 代わりに「ZIPを書き出す」時に、選んだ画像を ZIP にまとめます
 // - 画像は assets/uploads/ 配下に入る想定（運用で変更OK）
 // =========================================================
+// uploads は「この editor.html が今認識している“画像の一覧”」です。
+// ここに入るのは “ファイルを選択した時だけ”。
+// - id        : GUI内での識別用（連番やUUID的なもの）
+// - name      : 元ファイル名（表示用）
+// - path      : サイト側で参照するパス文字列（assets/uploads/xxx.jpg）← JSONに入れるのはこれ
+// - file      : ブラウザが持っている File オブジェクト（生データ）
+// - bytes     : ZIPを書き出す時に必要なバイナリ（Uint8Array）
+// - objectUrl : プレビュー表示用の一時URL（blob:...）
+//
+// C++的に言うと「メタ情報 + バッファをまとめた構造体配列」です。
 let uploads = [];
 // uploads: [{ id, name, path, file, bytes(Uint8Array), objectUrl }]
 
@@ -139,6 +191,20 @@ function bindText(idPath, opts = {}) {
 }
 
 // パス操作（"a.b.c"）
+
+// =========================================================
+// パス操作（"a.b.c"）の考え方
+// ---------------------------------------------------------
+// data-bind="meta.siteTitle" のように、入力フォームは “ドット区切りの道” で
+// state の中の値を指定します。
+// 例： state.meta.siteTitle にアクセスしたい → "meta.siteTitle"
+//
+// getByPath: 文字列パス → 値を取り出す
+// setByPath: 文字列パス → 値を書き込む（途中が無ければ作る）
+//
+// JSの ??= は「もし左が null/undefined なら右を代入」。
+// C++でいう「未初期化なら new しておく」みたいな保険です。
+// =========================================================
 function getByPath(obj, path) {
   return path.split(".").reduce((acc, k) => (acc ? acc[k] : undefined), obj);
 }
@@ -168,6 +234,13 @@ function renderList(rootSel, items, itemTitleFn, fields, addFn) {
   // - 既存JSONにだけ存在するパスもあるので、手入力欄は残す
   // ---------------------------------------------------------
   const getImageCandidates = () => {
+    // 画像候補が“空”になる典型パターン：
+    // - editor.html 側で画像をまだ読み込んでいない
+    // - 画像一覧（manifest）が無い / 読み込みに失敗している
+    //
+    // この関数は「今 editor に認識されている画像のパス一覧」を返すだけです。
+    // なので、まず editor の“画像アップロードUI”で画像を選択 → 候補が増える、という流れになります。
+
     const fromUploads = (uploads || []).map((u) => u.path).filter(Boolean);
     // 今後 manifest.json 方式にするなら、ここに外部リストを足す
     // const fromManifest = (manifestPaths || []);
@@ -176,6 +249,12 @@ function renderList(rootSel, items, itemTitleFn, fields, addFn) {
     return Array.from(new Set(all));
   };
 
+  
+  // resolvePreviewSrc は “プレビューに何を表示するか” を決める関数。
+  // - 画像を file input で読み込むと、ブラウザが一時URL（blob:...）を作れる → objectUrl
+  // - それがあれば「ローカルの editor.html だけ」でも画像が表示できる
+  // - objectUrl が無い場合は、単純に path をそのまま img.src に入れる
+  //   ※ その場合、Live Server などで “サイトとして配信” されている必要があることが多い
   const resolvePreviewSrc = (path) => {
     if (!path) return "";
     // 1) 今この editor で読み込んだ画像なら objectUrl で表示（file://でも見える）
@@ -260,6 +339,19 @@ function renderList(rootSel, items, itemTitleFn, fields, addFn) {
       // - select（候補から選ぶ） + input（手入力） + プレビュー
       // -------------------------------------------------------
       if (f.type === "image") {
+        // 🔰 ここは “画像の扱い” の一番大事な前提：
+        // --------------------------------------------------
+        // このGUIは「画像そのもの（バイナリ）」は保存しません。
+        // JSONに入るのは “画像パス文字列” だけです。
+        //
+        // つまり…
+        // - 画像ファイル（jpg/png/webp）は、別途 assets/uploads/ に置く
+        // - JSONには "assets/uploads/xxx.jpg" のような文字列だけ入れる
+        //
+        // なぜ？：
+        // - JSONはテキストなので画像を入れると巨大化＆壊れやすい
+        // - GitHub Pagesは “静的配信” なので、画像もファイルとして置くのが自然
+
         // 画像は “パス文字列” を保存するだけ（JSONにバイナリは入れない）
         const row = document.createElement("div");
         row.className = "row";
@@ -1222,6 +1314,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // JSON書き出し（文章だけ更新したい時）
 $("#downloadJson").addEventListener("click", downloadJSON);
+
+// 🔰 ブラウザ上の制約（大事）
+// ----------------------------------------------------------
+// Webページ（editor.html）は、勝手にPCのフォルダへ“上書き保存”できません。
+// セキュリティ上、できるのは「ダウンロードさせる」ことまで。
+// だからこのGUIは、更新結果を site.json / zip として “ダウンロード” し、
+// それを管理者に送る運用になっています。
+
 
 // ZIP書き出し（画像も同梱：推奨）
 const zipBtn = $("#downloadZip");
