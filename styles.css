@@ -15,9 +15,6 @@
 
   /* ===== 編集ポイント：フォーカス色（キーボード操作の見た目） ===== */
   --focus: 0 0 0 3px rgba(178,58,58,0.45);
-
-  /* ===== 編集ポイント：ヘッダの下線位置（1ついじるだけで調整できる） ===== */
-  --navUnderlineOffset: 6px; /* 4〜8px で調整 */
 }
 
 /* ===== ベース ===== */
@@ -50,7 +47,7 @@ img{ max-width: 100%; display: block; }
 .container{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
 
 /* ===== stickyヘッダー分のズレ対策 ===== */
-section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに合わせて 90〜110px で調整 */
+section{ scroll-margin-top: 78px; }
 .anchor{ height: 0; }
 
 /* ===== キーボード用：本文へスキップ ===== */
@@ -91,13 +88,6 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
   height: 64px;
   gap: 12px;
 }
-
-/* ===== ヘッダ崩れ対策：ロゴとナビが詰まってもレイアウトが壊れないように ===== */
-/* 編集ポイント：ロゴが縮んで欲しくないので固定。ナビは縮んで横スクロールに逃がす */
-.brand{ flex: 0 0 auto; }
-.header__inner{ min-width: 0; }
-.nav{ min-width: 0; }
-
 
 /* ===== ロゴ（文字） ===== */
 .brand{ text-decoration: none; display: grid; gap: 2px; }
@@ -261,7 +251,7 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
 }
 .badge{
   display: inline-block;
-  font-size: 20px;
+  font-size: 12px;
   letter-spacing: 0.18em;
   color: rgba(255,255,255,0.82);
   border: 1px solid var(--line);
@@ -375,61 +365,22 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
   color: var(--muted);
 }
 
-/* =========================================================
-   List（沿革など：年 + 内容）
-   - 以前の flex + space-between は、左右が離れすぎて
-     「文字間が広い」ように見えることがあるため
-     グリッドで“年カラム”を固定して整列させます。
-   - ここは沿革以外にも「キー：値」の行に流用できます。
-   ========================================================= */
-
 .list{
-  /* ===== 編集ポイント：年の列幅（2025が収まる程度） ===== */
-  --year-col: 4.5em;
-
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid; /* li を縦に積む */
-}
-
-/* 1行（年 + 内容） */
-.list li{
   display: grid;
-  grid-template-columns: var(--year-col) 1fr; /* 左：年 / 右：内容 */
-  column-gap: 60px; /* ===== 編集ポイント：年と内容の間隔 ===== */
-  align-items: baseline; /* 数字と文字の高さを揃えて読みやすく */
-  padding: 10px 0;
+  gap: 8px;
+}
+.list li{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
   border-bottom: 1px dashed rgba(255,255,255,0.16);
+  padding-bottom: 8px;
 }
-
-.list li:last-child{
-  border-bottom: 0; /* 最後の線は消す（すっきり） */
-  padding-bottom: 0;
-}
-
-.list__key{
-  color: var(--muted);
-  font-variant-numeric: tabular-nums; /* 年が揃って見える（プロ感） */
-}
-
-.list__val{
-  font-weight: 800;
-
-  /* ===== 編集ポイント：右寄せにしたい場合 =====
-     右側の文字を揃えると“表”っぽく見えます。
-     ただし、広い画面だと離れすぎて見える場合があるので
-     まずは左寄せ（デフォルト）がおすすめです。 */
-  /* text-align: right; */
-
-  min-width: 0; /* 長文がある時に崩れないための保険 */
-}
-
-/* ===== スマホ：年列と間隔を少し詰める ===== */
-@media (max-width: 520px){
-  .list{ --year-col: 4.0em; }
-  .list li{ column-gap: 14px; }
-}
+.list__key{ color: var(--muted); }
+.list__val{ font-weight: 800; }
 
 .link{ color: rgba(255,255,255,0.86); }
 .link:hover{ color: white; text-decoration: underline; }
@@ -441,10 +392,21 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
 .avatar{
   width: 72px; height: 72px;
   border-radius: 999px;
-  margin: 4px auto 10px;
+  
+    overflow: hidden; /* 写真を丸く切り抜く */
+    display: grid;
+    place-items: center;
+    margin: 4px auto 10px;
   background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
   border: 1px solid var(--line);
 }
+  .avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
 
 /* ===== Social ===== */
 .social{
@@ -453,22 +415,13 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
 }
 .social__label{
   margin: 0 0 6px;
-
-  /* ===== 編集ポイント：X / YouTube の文字サイズ ===== */
-  font-size: 18px;            /* 12 → 14〜16 あたりが見やすい */
-
-  /* ===== 編集ポイント：見出し感を少し強くする ===== */
-  font-weight: 900;           /* なくてもOK（強すぎたら 800） */
-  letter-spacing: .14em;      /* 広すぎると逆に間延びするので少し詰める */
-
-  color: var(--muted);}
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: var(--muted);
+}
 .social__title{
   margin: 0 0 6px;
-
-  /* ===== 編集ポイント：SNSカードのメイン見出し ===== */
-  font-size: 16px;  /* 16 → 17〜18 */
-
-  font-weight: 900; /* タイトル感（任意） */
+  font-size: 16px;
 }
 .social__go{
   margin: 12px 0 0;
@@ -503,47 +456,4 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   *{ transition: none !important; }
-}
-
-
-/* =========================================================
-   Pro polish pack（余白・見出し・カード整形）
-   目的：
-   - #news / #schedule へ飛んだ時に“ヘッダに隠れない”
-   - セクション間の“呼吸”を作って高級感を上げる
-   - News / Schedule のカードを揃えて“整ってる感”を出す
-
-   編集ポイント：
-   - 余白を詰めたい：.section の padding を下げる（54→48など）
-   - Newsカードの高さ：.newsGrid .card の min-height を調整
-   - Scheduleカードの高さ：.scheduleGrid .card の min-height を調整
-========================================================= */
-
-/* ===== セクション余白（全体の品） ===== */
-.section{
-  padding: 54px 0; /* 編集ポイント：48〜64px で好み調整 */
-}
-
-/* ===== 見出し階層の統一（公式サイト感） ===== */
-.section__head{ margin-bottom: 18px; }
-.section__title{
-  font-size: 24px;       /* 編集ポイント：22→24で“見出し感”UP */
-  letter-spacing: 0.03em;
-}
-.section__sub{
-  margin-top: 8px;
-  line-height: 1.6;
-}
-
-/* ===== News：3カードが“同じ高さ”に見えると一気にプロ ===== */
-.newsGrid .card{
-  min-height: 120px; /* 編集ポイント：120〜140 */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* ===== Schedule：カードがバラつくと素人感が出るので最低限揃える ===== */
-.scheduleGrid .card{
-  min-height: 140px; /* 編集ポイント：140〜170 */
 }

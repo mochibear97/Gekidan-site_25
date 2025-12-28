@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "siteTitle": "劇団〇〇｜公式サイト",
+    "description": "劇団〇〇の公式サイト。最新公演情報、予約、お知らせ、劇団紹介、メンバー、SNS、お問い合わせ。",
+    "themeColor": "#0b0d12"
+  },
+  "branding": {
+    "troupeNameJp": "劇団〇〇",
+    "troupeNameEn": "GEKIDAN XX"
+  },
+  "hero": {
+    "badge": "次回公演",
+    "title": "『作品タイトル』",
+    "lead": "キャッチコピー（1〜2行）。\n例：笑って、泣いて、最後に少しだけ救われる話。",
+    "metaCards": [
+      {
+        "label": "日程",
+        "value": "2026.02.14–02.16"
+      },
+      {
+        "label": "会場",
+        "value": "〇〇シアター"
+      },
+      {
+        "label": "料金",
+        "value": "前売 ¥3,500"
+      }
+    ],
+    "reserve": {
+      "label": "チケット予約",
+      "url": "#reserve"
+    },
+    "note": "※公演詳細はSNSを確認推奨",
+    "keyVisual": {
+      "src": "",
+      "alt": "『作品タイトル』メインビジュアル"
+    }
+  },
+  "news": [
+    {
+      "date": "2025.12.27",
+      "title": "次回公演の情報を公開しました",
+      "text": "予約開始日・会場などを更新。",
+      "link": ""
+    },
+    {
+      "date": "2025.12.10",
+      "title": "出演者を発表しました",
+      "text": "キャストページを更新。",
+      "link": ""
+    },
+    {
+      "date": "2025.11.30",
+      "title": "稽古場レポートを掲載",
+      "text": "SNSに写真を追加。",
+      "link": ""
+    }
+  ],
+  "schedule": {
+    "sub": "今後の公演予定",
+    "note": "※ スケジュールは変更になる場合があります。",
+    "items": [
+      {
+        "date": "2026.02.14–02.16",
+        "title": "第x回公演『作品タイトル』",
+        "body": "会場：〇〇シアター\n備考：チケット発売中",
+        "link": ""
+      },
+      {
+        "date": "2026.01",
+        "title": "稽古開始",
+        "body": "次回公演に向けた稽古スタート。",
+        "link": ""
+      }
+    ]
+  },
+  "about": {
+    "sub": "「何を大事にする劇団か」を一言で。",
+    "conceptTitle": "コンセプト",
+    "concept": "例：日常のすぐ横にある感情を、静かに、でも確かな言葉で立ち上げる。",
+    "historyTitle": "沿革",
+    "history": [
+      {
+        "year": "20xx",
+        "text": "劇団結成"
+      },
+      {
+        "year": "20xx",
+        "text": "第1回公演『〇〇』"
+      },
+      {
+        "year": "20xx",
+        "text": "第2回公演『〇〇』"
+      }
+    ]
+  },
+  "members": [
+    {
+      "name": "〇〇",
+      "role": "座長",
+      "note": "一言コメント。",
+      "snsLabel": "個人SNS",
+      "snsUrl": "",
+      "photo": ""
+    },
+    {
+      "name": "〇〇",
+      "role": "役者",
+      "note": "一言コメント。",
+      "snsLabel": "個人SNS",
+      "snsUrl": "",
+      "photo": ""
+    }
+  ],
+  "socials": {
+    "sub": "稽古場の空気感や最新情報はSNSで更新しています",
+    "items": [
+      {
+        "enabled": true,
+        "label": "X",
+        "title": "最新情報",
+        "text": "公演情報・告知・当日案内",
+        "url": ""
+      },
+      {
+        "enabled": true,
+        "label": "YouTube",
+        "title": "映像（👷準備中👷）",
+        "text": "ダイジェスト・トレーラー",
+        "url": ""
+      }
+    ]
+  },
+  "contact": {
+    "sub": "出演依頼・公演のご相談・取材など",
+    "email": "info@example.com"
+  },
+  "footer": {
+    "brand": "劇団〇〇",
+    "small": "© 2025 Gekidan XX. All rights reserved."
+  }
+}

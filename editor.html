@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>劇団サイト更新GUI（editor.html）</title>
+
+  <!-- =========================================================
+    editor.html（運用用GUI）
+    目的：
+    - “Gitを触らせない”
+    - “HTMLを編集させない”
+    - 文章/日付だけをフォームから更新させる
+
+    編集者がやること：
+    1) editor.html を開く
+    2) 内容を編集
+    3) 「JSONを書き出す」→ site.json を保存
+    4) 管理者に site.json を送る
+
+    管理者がやること：
+    - repo の content/site.json を上書きして公開
+  ========================================================== -->
+
+  <link rel="stylesheet" href="./editor.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">
+        <b>劇団サイト更新GUI</b>
+        <small>EDITOR / JSON Export</small>
+      </div>
+
+      <div class="row" style="justify-content:flex-end">
+        <!-- ===== 既存JSONを読み込み（任意） ===== -->
+        <label class="btn" for="loadJson" style="cursor:pointer;">
+          JSONを読み込む
+        </label>
+        <input id="loadJson" type="file" accept=".json,application/json" hidden />
+
+        <!-- ===== テンプレに戻す ===== -->
+        <button class="btn" id="reset" type="button">テンプレに戻す</button>
+
+        <!-- ===== JSONを書き出し（これがメイン） ===== -->
+        <!-- ===== ZIPを書き出し（画像も同梱：推奨） ===== -->
+<button class="btn btn--primary" id="downloadZip" type="button">ZIPを書き出す（画像込み）</button>
+
+<!-- ===== JSONだけ書き出し（文章だけ更新したい時） ===== -->
+<button class="btn" id="downloadJson" type="button">JSONを書き出す</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="toast" class="badge" style="opacity:0; transition: opacity .2s ease; display:inline-block; margin-bottom:12px;"></div>
+
+    <div class="grid">
+      <!-- ============================================
+        左：フォーム（編集者が触る）
+      ============================================= -->
+      <section class="card">
+        <h1>入力（ここだけ触ればOK）</h1>
+        <p class="help">
+          ここで編集 → <b>JSONを書き出す</b> を押すだけで更新用ファイルが作れます。<br/>
+          ※ 「リンク」は空でもOK（空ならサイト側で表示しません）
+        </p>
+
+        <div class="hr"></div>
+
+        <h2>基本情報</h2>
+        <div class="field">
+          <label>サイトタイトル（ブラウザのタブ）</label>
+          <input data-bind="meta.siteTitle" placeholder="劇団〇〇｜公式サイト" />
+        </div>
+        <div class="field">
+          <label>説明（検索用 / meta description）</label>
+          <textarea data-bind="meta.description"></textarea>
+        </div>
+        <div class="field">
+          <label>テーマカラー（任意：#0b0d12 など）</label>
+          <input data-bind="meta.themeColor" placeholder="#0b0d12" />
+        </div>
+
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>劇団名（日本語）</label>
+            <input data-bind="branding.troupeNameJp" placeholder="劇団〇〇" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>劇団名（英語）</label>
+            <input data-bind="branding.troupeNameEn" placeholder="GEKIDAN XX" />
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>トップ（Hero）</h2>
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>バッジ（例：次回公演）</label>
+            <input data-bind="hero.badge" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>作品タイトル</label>
+            <input data-bind="hero.title" />
+          </div>
+        </div>
+        <div class="field">
+          <label>リード文（改行OK）</label>
+          <textarea data-bind="hero.lead"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>メタ1 ラベル</label>
+            <input data-bind="hero.metaCards.0.label" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>メタ1 値</label>
+            <input data-bind="hero.metaCards.0.value" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>メタ2 ラベル</label>
+            <input data-bind="hero.metaCards.1.label" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>メタ2 値</label>
+            <input data-bind="hero.metaCards.1.value" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>メタ3 ラベル</label>
+            <input data-bind="hero.metaCards.2.label" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>メタ3 値</label>
+            <input data-bind="hero.metaCards.2.value" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>予約ボタン文字</label>
+            <input data-bind="hero.reserve.label" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>予約URL（例：予約フォームのURL）</label>
+            <input data-bind="hero.reserve.url" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>トップの注意書き（任意）</label>
+          <input data-bind="hero.note" />
+        </div>
+
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>キービジュアル画像パス（任意）</label>
+            <input data-bind="hero.keyVisual.src" placeholder="./assets/keyvisual.jpg" />
+            <p class="help">例：repoに画像を置いて、そのパスを書きます（画像の配置は管理者担当にする運用が楽）。</p>
+          </div>
+          <div class="field" style="flex:1">
+            <label>画像 alt（任意）</label>
+            <input data-bind="hero.keyVisual.alt" />
+          </div>
+        </div>
+
+        <!-- =========================================================
+          画像アップロード（任意）
+          - ここで画像を選ぶと、ZIP書き出し時に assets/uploads/ に同梱されます
+          - hero.keyVisual.src（キービジュアル）へ自動反映もできます
+          - 画像の「置き場（assets/uploads/）」は後から変えてもOK（管理者側で整理）
+        ========================================================== -->
+        <h2>画像（アップロード / 任意）</h2>
+
+        <div class="field">
+          <label>キービジュアル画像を選択（推奨）</label>
+          <input id="kvFile" type="file" accept="image/*" />
+          <p class="help">
+            選ぶと <b>hero.keyVisual.src</b> が自動で <b>assets/uploads/keyvisual.xxx</b> になります。<br/>
+            ※ 画像のファイル名は、あとで一覧から変更できます。
+          </p>
+        </div>
+
+        <div class="field">
+          <label>画像を追加（複数可 / 任意）</label>
+          <input id="imgFiles" type="file" accept="image/*" multiple />
+          <p class="help">
+            追加した画像は ZIP に同梱され、展開すると <b>assets/uploads/</b> に入ります。<br/>
+            使うときは「パスをコピー」して、各入力欄（例：hero.keyVisual.src）に貼り付けてください。
+          </p>
+        </div>
+
+
+        <!-- =========================================================
+          既存画像（assets/uploads）を参照したい場合
+          - ブラウザは “フォルダ一覧を勝手に読む” ことができません（セキュリティ仕様）
+          - 代わりに、管理者が assets/uploads/manifest.json を用意しておくと
+            ここから読み込んで「画像ライブラリ」に追加できます
+          - 例）assets/uploads/manifest.json の中身：
+              { "base": "assets/uploads/", "files": ["a.jpg","b.png"] }
+            もしくは ["a.jpg","b.png"] の配列でもOK
+          - 注意：manifestに載っている画像は「すでにリポジトリにある前提」なので
+            ZIP書き出しには同梱されません（JSON内のパス参照だけ）
+        ========================================================== -->
+        <div class="field">
+          <label>既存の画像一覧を読み込む（assets/uploads/manifest.json）</label>
+          <div class="row" style="gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="loadUploadsBtn" type="button">assets/uploads を読み込む</button>
+
+            <!-- フォールバック：manifest.json を手で選ぶ（file:// 直開き等で fetch が効かない場合） -->
+            <label class="btn" for="loadUploadsFile" style="cursor:pointer;">manifest.json を選ぶ</label>
+            <input id="loadUploadsFile" type="file" accept=".json,application/json" hidden />
+          </div>
+          <p class="help">
+            ✅ これを読み込むと、メンバー写真などの「画像選択プルダウン」に
+            <b>assets/uploads/</b> の候補が出ます。
+          </p>
+        </div>
+
+        <!-- 画像一覧（ここにサムネとパスが出ます） -->
+        <div id="imageList"></div>
+        <div class="hr"></div>
+
+        <h2>News</h2>
+        <div id="newsList"></div>
+
+        <div class="hr"></div>
+
+        <h2>Schedule</h2>
+        <div class="field">
+          <label>セクション説明</label>
+          <input data-bind="schedule.sub" />
+        </div>
+        <div class="field">
+          <label>注意書き（※変更になる場合があります 等）</label>
+          <input data-bind="schedule.note" />
+        </div>
+        <div id="scheduleList"></div>
+
+        <div class="hr"></div>
+
+        <h2>劇団について（About）</h2>
+        <div class="field">
+          <label>セクション説明</label>
+          <input data-bind="about.sub" />
+        </div>
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>コンセプト見出し</label>
+            <input data-bind="about.conceptTitle" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>沿革見出し</label>
+            <input data-bind="about.historyTitle" />
+          </div>
+        </div>
+        <div class="field">
+          <label>コンセプト本文</label>
+          <textarea data-bind="about.concept"></textarea>
+        </div>
+        <div id="historyList"></div>
+
+        <div class="hr"></div>
+
+        <h2>メンバー</h2>
+        <div id="membersList"></div>
+
+        <div class="hr"></div>
+
+        <h2>Follow（SNS）</h2>
+        <div class="field">
+          <label>セクション説明</label>
+          <input data-bind="socials.sub" />
+        </div>
+        <p class="help">enabled は true/false（falseにするとサイト側で非表示）</p>
+        <div id="socialsList"></div>
+
+        <div class="hr"></div>
+
+        <h2>お問い合わせ</h2>
+        <div class="field">
+          <label>セクション説明</label>
+          <input data-bind="contact.sub" />
+        </div>
+        <div class="field">
+          <label>メールアドレス</label>
+          <input data-bind="contact.email" />
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>フッタ</h2>
+        <div class="row">
+          <div class="field" style="flex:1">
+            <label>左側の表記</label>
+            <input data-bind="footer.brand" />
+          </div>
+          <div class="field" style="flex:1">
+            <label>右側の表記</label>
+            <input data-bind="footer.small" />
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <p class="help">
+          ✅ 出力した <b>site.json</b> は、サイト側の <b>content/site.json</b> に上書きすると反映されます。
+        </p>
+      </section>
+
+      <!-- ============================================
+        右：JSONプレビュー（管理者・検品用）
+      ============================================= -->
+      <aside class="card">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+          <h1>JSONプレビュー</h1>
+          <span class="badge">コピーして送れる</span>
+        </div>
+        <p class="help">
+          ここは確認用です。編集者は基本見なくてOK。<br/>
+          （困ったらここを全部コピーして管理者へ）
+        </p>
+        <pre id="preview" class="code"></pre>
+      </aside>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h2>運用メモ（重要）</h2>
+      <p class="help">
+        <b>この方式は「編集者はGit不要」</b>ですが、<b>公開反映</b>は管理者が行います。<br/>
+        将来的に「特定の人だけがGUIから直接更新して即反映」までやるなら、
+        サーバ（認証・保存先）が必要になります（別フェーズで設計します）。
+      </p>
+      <div class="code">【最短運用】
+(編集者) editor.html → site.json を出して管理者へ
+(管理者) repo の content/site.json を差し替えて push
+(GitHub Pages) 自動で反映</div>
+    </div>
+  </main>
+
+  <script src="./editor.js"></script>
+</body>
+</html>
