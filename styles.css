@@ -547,3 +547,15 @@ section{ scroll-margin-top: 96px; } /* 編集ポイント：ヘッダ高さに�
 .scheduleGrid .card{
   min-height: 140px; /* 編集ポイント：140〜170 */
 }
+
+
+/* =========================================================
+   Avatar（メンバー写真）
+   - JSが .has-photo を付けたときだけ写真表示に切り替える
+   - 画像は background-image で当てる（HTMLを増やさず運用が簡単）
+========================================================= */
+.avatar.has-photo{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
