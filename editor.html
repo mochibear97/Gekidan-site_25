@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>劇団サイト編集ツール（site.def GUI）</title>
+  <link rel="stylesheet" href="./editor.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__left">
+      <div class="topbar__title">劇団サイト編集ツール（site.def）</div>
+      <div class="topbar__sub">自動フォーム / 追加ボタン / 画像サムネ / D&D読込 / 差分表示 / 即プレビュー</div>
+    </div>
+    <div class="topbar__right">
+      <button id="btnReload" class="btn">site.def 再読込</button>
+      <button id="btnDiff" class="btn">差分を見る</button>
+      <button id="btnCopy" class="btn">defをコピー</button>
+      <button id="btnDownload" class="btn btn--primary">site.def をダウンロード</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="panel">
+      <div class="panel__head">
+        <div id="dropZone" class="dropZone">
+          <div class="dropZone__title">ここに <code>site.def</code> をドラッグ＆ドロップで読み込み</div>
+          <div class="dropZone__sub">または <button id="btnPick" class="btn btn--mini">ファイル選択</button></div>
+          <input id="filePicker" type="file" accept=".def,.txt" hidden />
+        </div>
+
+        <div class="hint">
+          <div class="hint__title">使い方</div>
+          <ol>
+            <li>左で編集（追加/削除もOK）</li>
+            <li>右プレビューが即更新（該当セクションにスクロール）</li>
+            <li>「site.def ダウンロード」→ GitHubの <code>content/site.def</code> を上書きコミット</li>
+          </ol>
+        </div>
+
+        <div class="small">
+          読み込み候補：<code>../content/site.def</code>（あなたの構成に合わせています）
+        </div>
+      </div>
+
+      <div id="formRoot" class="formRoot"></div>
+    </aside>
+
+    <main class="preview">
+      <iframe id="previewFrame" title="preview" src="../index.html"></iframe>
+    </main>
+  </div>
+
+  <!-- 差分モーダル -->
+  <div id="diffModal" class="modal" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__panel">
+      <div class="modal__head">
+        <div class="modal__title">差分（変更されたキーだけ）</div>
+        <div class="modal__tools">
+          <button id="btnApplyRevertAll" class="btn">全部元に戻す</button>
+          <button class="btn" data-close="1">閉じる</button>
+        </div>
+      </div>
+      <div id="diffBody" class="modal__body"></div>
+    </div>
+  </div>
+
+  <script src="./editor.js"></script>
+</body>
+</html>
