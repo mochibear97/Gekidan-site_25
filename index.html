@@ -3,429 +3,69 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <!-- ===== 編集ポイント：サイトタイトル（ブラウザのタブ名） ===== -->
-  <title>劇団〇〇｜公式サイト</title>
-
-  <!-- ===== 編集ポイント：検索結果に出る説明（80〜120文字くらい推奨） ===== -->
-  <meta name="description" content="劇団〇〇の公式サイト。最新公演情報、予約、お知らせ、劇団紹介、メンバー、ギャラリー、お問い合わせ。" />
-
-  <!-- ===== 編集ポイント：OGP（SNSでシェアした時の見た目） =====
-       公開URLが決まったら og:url / og:image を必ず入れると“プロ感”が上がる -->
-  <meta property="og:title" content="劇団〇〇｜公式サイト" />
-  <meta property="og:description" content="最新公演情報・予約はこちら。" />
-  <meta property="og:type" content="website" />
-  <!-- 公開後にURLへ差し替え -->
-  <!-- <meta property="og:url" content="https://example.com/" /> -->
-  <!-- 画像URLへ差し替え（推奨：1200x630） -->
-  <!-- <meta property="og:image" content="https://example.com/assets/ogp.jpg" /> -->
-
-  <!-- ===== 編集ポイント：アドレスバー等のテーマカラー（サイトの背景色に合わせる） ===== -->
-  <meta name="theme-color" content="#0b0d12" />
-
-  <!-- ===== 編集ポイント：favicon（タブアイコン） ===== -->
-  <!-- <link rel="icon" href="./assets/favicon.png" /> -->
-
-  <link rel="stylesheet" href="./styles.css" />
+  <title>劇団サイト編集ツール（site.def GUI）</title>
+  <link rel="stylesheet" href="./editor.css" />
 </head>
-
 <body>
-  <!-- ===== アクセシビリティ：キーボード利用者が本文へ飛べる ===== -->
-  <a class="skip" href="#main">本文へスキップ</a>
-
-  <!-- ===== ヘッダー：ロゴ＋ナビ ===== -->
-  <header class="header" data-header>
-    <div class="container header__inner">
-
-      <!-- ===== 編集ポイント：劇団名（ロゴ文字） ===== -->
-      <a class="brand" href="#top" aria-label="トップへ戻る">
-        <span class="brand__jp">劇団〇〇</span>
-        <span class="brand__en">GEKIDAN XX</span>
-      </a>
-
-      <!-- ===== PC表示のナビ（スマホでは非表示になる） ===== -->
-      <nav class="nav" id="nav" aria-label="グローバルナビゲーション">
-        <!-- ===== 編集ポイント：並び順を変えるとヘッダ体験が変わる ===== -->
-        <a href="#news">News</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#about">劇団について</a>
-        <a href="#members">メンバー</a>
-        <a href="#follow">SNS</a>
-
-        <!-- ===== 編集ポイント：CTA（強い導線）にしたい項目には nav__cta を付ける ===== -->
-        <a href="#contact" class="nav__cta">お問い合わせ</a>
-      </nav>
-
-      <!-- ===== スマホのメニュー開閉ボタン ===== -->
-      <button class="navToggle" id="navToggle"
-              aria-expanded="false" aria-controls="navDrawer">
-        メニュー
-      </button>
+  <header class="topbar">
+    <div class="topbar__left">
+      <div class="topbar__title">劇団サイト編集ツール（site.def）</div>
+      <div class="topbar__sub">自動フォーム / 追加ボタン / 画像サムネ / D&D読込 / 差分表示 / 即プレビュー</div>
+    </div>
+    <div class="topbar__right">
+      <button id="btnReload" class="btn">site.def 再読込</button>
+      <button id="btnDiff" class="btn">差分を見る</button>
+      <button id="btnCopy" class="btn">defをコピー</button>
+      <button id="btnDownload" class="btn btn--primary">site.def をダウンロード</button>
     </div>
   </header>
 
-  <!-- ===== スマホ用ドロワーメニュー（ここを編集するとスマホ用メニューが変わる） ===== -->
-  <div class="drawer" id="navDrawer" hidden>
-    <div class="drawer__backdrop" data-close-drawer></div>
+  <div class="layout">
+    <aside class="panel">
+      <div class="panel__head">
+        <div id="dropZone" class="dropZone">
+          <div class="dropZone__title">ここに <code>site.def</code> をドラッグ＆ドロップで読み込み</div>
+          <div class="dropZone__sub">または <button id="btnPick" class="btn btn--mini">ファイル選択</button></div>
+          <input id="filePicker" type="file" accept=".def,.txt" hidden />
+        </div>
 
-    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="メニュー">
-      <div class="drawer__head">
-        <div class="drawer__title">MENU</div>
-        <button class="drawer__close" data-close-drawer aria-label="メニューを閉じる">×</button>
+        <div class="hint">
+          <div class="hint__title">使い方</div>
+          <ol>
+            <li>左で編集（追加/削除もOK）</li>
+            <li>右プレビューが即更新（該当セクションにスクロール）</li>
+            <li>「site.def ダウンロード」→ GitHubの <code>content/site.def</code> を上書きコミット</li>
+          </ol>
+        </div>
+
+        <div class="small">
+          読み込み候補：<code>../content/site.def</code>（あなたの構成に合わせています）
+        </div>
       </div>
 
-      <div class="drawer__links">
-        <!-- ===== 編集ポイント：スマホメニュー項目 ===== -->
-        <a href="#news">News</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#about">劇団について</a>
-        <a href="#members">メンバー</a>
-        <a href="#follow">SNS</a>
+      <div id="formRoot" class="formRoot"></div>
+    </aside>
 
-        <!-- ===== 編集ポイント：スマホ側もCTAにしたい場合は drawer__cta を付ける ===== -->
-        <a href="#contact" class="drawer__cta">お問い合わせ</a>
-      </div>
+    <main class="preview">
+      <iframe id="previewFrame" title="preview" src="../index.html"></iframe>
+    </main>
+  </div>
 
-      <div class="drawer__foot">
-        <small>© 2025 Gekidan XX</small>
+  <!-- 差分モーダル -->
+  <div id="diffModal" class="modal" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__panel">
+      <div class="modal__head">
+        <div class="modal__title">差分（変更されたキーだけ）</div>
+        <div class="modal__tools">
+          <button id="btnApplyRevertAll" class="btn">全部元に戻す</button>
+          <button class="btn" data-close="1">閉じる</button>
+        </div>
       </div>
+      <div id="diffBody" class="modal__body"></div>
     </div>
   </div>
 
-  <main id="main">
-    <!-- ===== ページ上部アンカー（#top の着地点） ===== -->
-    <div id="top" class="anchor"></div>
-
-    <!-- ===== Hero（最重要：第一印象が決まる） ===== -->
-    <section class="hero">
-      <div class="container hero__inner">
-
-        <div class="hero__copy">
-          <!-- ===== 編集ポイント：バッジ文言 ===== -->
-          <p class="badge">次回公演</p>
-
-          <!-- ===== 編集ポイント：公演タイトル（最も目立つ） ===== -->
-          <h1 class="hero__title">『作品タイトル』</h1>
-
-          <!-- ===== 編集ポイント：キャッチコピー（1〜2行推奨） ===== -->
-          <p class="hero__lead">
-            キャッチコピー（1〜2行）。<br />
-            例：笑って、泣いて、最後に少しだけ救われる話。
-          </p>
-
-          <!-- ===== 編集ポイント：公演の主要情報 ===== -->
-          <div class="hero__meta">
-            <div class="metaCard">
-              <div class="metaCard__label">日程</div>
-              <div class="metaCard__value">2026.02.14–02.16</div>
-            </div>
-            <div class="metaCard">
-              <div class="metaCard__label">会場</div>
-              <div class="metaCard__value">〇〇シアター</div>
-            </div>
-            <div class="metaCard">
-              <div class="metaCard__label">料金</div>
-              <div class="metaCard__value">前売 ¥3,500</div>
-            </div>
-          </div>
-
-          <!-- ===== 編集ポイント：ボタン導線（予約URLは必ず設定） ===== -->
-          <div class="hero__actions">
-            <!-- 公開時：href を予約フォームURLに差し替え推奨（#reserveでもOK） -->
-            <a class="btn btn--primary" href="#reserve">チケット予約</a>
-          </div>
-
-          <p class="hero__note">
-            ※公演詳細はSNSを確認推奨
-            <!-- 編集ポイント：補足（任意） -->
-          </p>
-        </div>
-
-        <div class="hero__visual">
-          <!-- ===== 編集ポイント：キービジュアル画像 =====
-               1) assets/keyvisual.jpg を置く
-               2) 下の img のコメントを外す
-               3) Placeholderは削除してOK -->
-          <!-- <img src="./assets/keyvisual.jpg" alt="『作品タイトル』メインビジュアル"> -->
-
-          <!-- 画像未用意の場合の仮表示 -->
-          <div class="hero__visualPlaceholder">KEY VISUAL</div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ===== アンカー：#show（公演詳細ボタンの着地点） ===== -->
-    <!-- 編集ポイント：公演詳細を独立セクションにする場合は、そこに id="show" を付けるのが理想 -->
-    <div id="show" class="anchor"></div>
-
-    <!-- ===== News ===== -->
-    <section class="section section--alt" id="news">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">News</h2>
-          <p class="section__sub"></p>
-        </div>
-
-        <div class="grid grid--3 newsGrid">
-          <!-- ===== 編集ポイント：ニュース（3件〜） ===== -->
-          <article class="card card--hover">
-            <p class="news__date">2025.12.27</p>
-            <h3 class="card__title">次回公演の情報を公開しました</h3>
-            <p class="card__text">予約開始日・会場などを更新。</p>
-          </article>
-
-          <article class="card card--hover">
-            <p class="news__date">2025.12.10</p>
-            <h3 class="card__title">出演者を発表しました</h3>
-            <p class="card__text">キャストページを更新。</p>
-          </article>
-
-          <article class="card card--hover">
-            <p class="news__date">2025.11.30</p>
-            <h3 class="card__title">稽古場レポートを掲載</h3>
-            <p class="card__text">ギャラリーに写真を追加。</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-<!-- ===== Schedule（今後の予定） ===== -->
-<section class="section section--alt" id="schedule">
-  <div class="container">
-    <div class="section__head">
-      <h2 class="section__title">Schedule</h2>
-      <p class="section__sub">今後の公演予定</p>
-    </div>
-
-    <!-- ===== 編集ポイント：予定は上から「近い順」 ===== -->
-    <div class="grid grid--2 scheduleGrid">
-      <article class="card">
-        <p class="news__date">2026.02.14–02.16</p>
-        <h3 class="card__title">第x回公演『作品タイトル』</h3>
-        <p class="card__text">
-          会場：〇〇シアター<br />
-          備考：チケット発売中
-        </p>
-      </article>
-
-      <article class="card">
-        <p class="news__date">2026.01</p>
-        <!-- ===== 編集ポイント：タイトル表記（カギカッコの閉じ忘れ注意） ===== -->
-        <h3 class="card__title">第x回公演『作品タイトル』</h3>
-        <p class="card__text">
-          次回公演に向けた稽古スタート。
-        </p>
-      </article>
-
-      <article class="card">
-        <p class="news__date">2026.01</p>
-        <!-- ===== 編集ポイント：タイトル表記（カギカッコの閉じ忘れ注意） ===== -->
-        <h3 class="card__title">第x回公演『作品タイトル』</h3>
-        <p class="card__text">
-          次回公演に向けた稽古スタート。
-        </p>
-      </article>
-      
-    </div>
-
-    <p class="note">
-      <!-- ===== 編集ポイント：運用ルールを書くと親切 ===== -->
-      ※ スケジュールは変更になる場合があります。
-    </p>
-  </div>
-</section>
-    
-<!-- =======================================================
-  ===== About（劇団について） =====
-  目的：
-  - 「コンセプト」と「沿革」を2カラムで横並びにする
-  - スマホでは自動で縦並び（CSSの grid--2 のレスポンシブが効く）
-  注意：
-  - div の閉じタグ位置がズレると、片方だけ横に伸びたり崩れます
-======================================================= -->
-<section class="section" id="about">
-  <div class="container">
-    <!-- ===== セクション見出し ===== -->
-    <div class="section__head">
-      <h2 class="section__title">劇団について</h2>
-
-      <!-- ===== 編集ポイント：サブコピー（空なら消してOK） ===== -->
-      <p class="section__sub">「何を大事にする劇団か」を一言で。</p>
-    </div>
-
-    <!-- =====================================================
-      ===== 2カラムのグリッド =====
-      ここから下は「カード2枚」を grid の中に入れるのがルール
-      ※ 途中で </div> を閉じるとレイアウトが崩れます
-    ====================================================== -->
-    <div class="grid grid--1">
-
-      <!-- =========================
-        カード①：コンセプト
-        編集ポイント：本文だけ変えればOK
-      ========================== -->
-      <article class="card">
-        <h3 class="card__title">コンセプト</h3>
-
-        <!-- ===== 編集ポイント：劇団コンセプト ===== -->
-        <p class="card__text">
-          例：日常のすぐ横にある感情を、静かに、でも確かな言葉で立ち上げる。
-        </p>
-
-        <!-- ===== 編集ポイント：補足（必要なら） ===== -->
-        <!-- <p class="note">例：観客の帰り道に、少しだけ温度が残る芝居を。</p> -->
-      </article>
-
-      <!-- =========================
-        カード②：沿革
-        編集ポイント：年と内容を増やすだけ
-      ========================== -->
-      <article class="card">
-        <h3 class="card__title">沿革</h3>
-
-        <!-- ===== 編集ポイント：沿革 =====
-          ・行を増やしたい → <li> を追加
-          ・年だけ変えたい → list__key の中身
-          ・内容を変えたい → list__val の中身
-        ===== -->
-        <ul class="list">
-          <li><span class="list__key">20xx</span><span class="list__val">劇団結成</span></li>
-          <li><span class="list__key">20xx</span><span class="list__val">第1回公演『〇〇』</span></li>
-          <li><span class="list__key">20xx</span><span class="list__val">第2回公演『〇〇』</span></li>
-          <li><span class="list__key">20xx</span><span class="list__val">第3回公演『〇〇』</span></li>
-          <li><span class="list__key">20xx</span><span class="list__val">第4回公演『〇〇』</span></li>
-        </ul>
-
-        <!-- ===== 編集ポイント：注意書き（必要なら） ===== -->
-        <!-- <p class="note">※ 公演名は後から差し替え可能です。</p> -->
-      </article>
-
-    </div><!-- /.grid -->
-  </div><!-- /.container -->
-</section>
-
-    <!-- ===== Members ===== -->
-    <section class="section section--alt" id="members">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">メンバー</h2>
-          <p class="section__sub"></p>
-        </div>
-
-        <div class="grid grid--3">
-          <!-- ===== 編集ポイント：メンバー（人数分増やす） ===== -->
-          <article class="card member card--hover">
-            <div class="avatar" aria-hidden="true"></div>
-            <h3 class="member__name">〇〇</h3>
-            <p class="member__role">座長</p>
-            <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
-          </article>
-
-          <article class="card member card--hover">
-            <div class="avatar" aria-hidden="true"></div>
-            <h3 class="member__name">〇〇</h3>
-            <p class="member__role">役者1</p>
-            <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
-          </article>
-
-          <article class="card member card--hover">
-            <div class="avatar" aria-hidden="true"></div>
-            <h3 class="member__name">〇〇</h3>
-            <p class="member__role">役者2</p>
-            <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
-          </article>
-
-          <article class="card member card--hover">
-            <div class="avatar" aria-hidden="true"></div>
-            <h3 class="member__name">〇〇</h3>
-            <p class="member__role">制作</p>
-            <p class="member__note">一言コメント。</p>
-            <a class="link" href="#" target="_blank" rel="noopener">個人SNS</a> 
-          </article>
-        </div>
-      </div>
-    </section>
-
-<!-- ===== Follow / SNS ===== -->
-<section class="section" id="follow">
-  <div class="container">
-    <div class="section__head">
-      <h2 class="section__title">SNS</h2>
-      <p class="section__sub">稽古場の空気感や最新情報はSNSで更新しています</p>
-    </div>
-
-    <div class="grid grid--3">
-      <!-- ===== 編集ポイント：URL差し替え ===== -->
-      <a class="social card card--hover" href="#" target="_blank" rel="noopener">
-        <p class="social__label">X</p>
-        <h3 class="social__title">最新情報</h3>
-        <p class="card__text">公演情報・告知・当日案内</p>
-        <p class="social__go">見に行く →</p>
-      </a>
-
-      <!-- <a class="social card card--hover" href="#" target="_blank" rel="noopener">
-        <p class="social__label">Instagram</p>
-        <h3 class="social__title">写真 / リール</h3>
-        <p class="card__text">稽古写真・舞台写真・雰囲気</p>
-        <p class="social__go">見に行く →</p>
-      </a> -->
-
-      <a class="social card card--hover" href="#" target="_blank" rel="noopener">
-        <p class="social__label">YouTube</p>
-        <h3 class="social__title">映像（👷準備中👷）</h3>
-        <p class="card__text">ダイジェスト・トレーラー</p>
-        <p class="social__go">見に行く →</p>
-      </a>
-    </div>
-
-    <p class="note">
-      
-    </p>
-  </div>
-</section>
-
-    <!-- ===== アンカー：#reserve（予約ボタンの着地点） ===== -->
-    <!-- 編集ポイント：外部予約フォームを使う場合は、#reserve ではなくURLに直リンクでもOK -->
-    <div id="reserve" class="anchor"></div>
-
-    <!-- ===== Contact ===== -->
-    <section class="section section--alt" id="contact">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title">お問い合わせ</h2>
-          <p class="section__sub">出演依頼・公演のご相談・取材など</p>
-        </div>
-
-        <div class="grid grid--2">
-          <article class="card">
-            <h3 class="card__title">メール</h3>
-
-            <!-- ===== 編集ポイント：メールアドレス ===== -->
-            <p class="card__text">
-              <a class="link" href="mailto:info@example.com">info@example.com</a>
-            </p>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Footer ===== -->
-    <footer class="footer">
-      <div class="container footer__inner">
-        <div>
-          <div class="footer__brand">劇団〇〇</div>
-          <div class="footer__small">© 2025 Gekidan XX. All rights reserved.</div>
-        </div>
-        <a class="link" href="#top">ページ上部へ ↑</a>
-      </div>
-    </footer>
-  </main>
-
-  <script src="./main.js"></script>
+  <script src="./editor.js"></script>
 </body>
 </html>
